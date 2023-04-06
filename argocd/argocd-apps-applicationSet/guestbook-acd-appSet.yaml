@@ -1,0 +1,25 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: guest-book
+  namespace: argocd
+spec:
+  generators:
+    - list:
+        elements:
+          - cluster: ref #local-c1
+            url: https://kubernetes.default.svc
+          - cluster: ppd #local-c2
+            url: https://192.168.1.68:8443
+  template:
+    metadata:
+      name: '{{cluster}}-guest-book'
+    spec:
+      project: default
+      source:
+        repoURL: https://github.com/brahimsayah/argocd-poc.git
+        targetRevision: HEAD
+        path: envs/{{cluster}}/guest-book
+      destination:
+        server: '{{url}}'
+        namespace: dev

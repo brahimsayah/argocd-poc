@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argocd-global-app
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/brahimsayah/argocd-poc.git
+    targetRevision: HEAD
+    path: argocd/argocd-apps-applicationSet
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: dev
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true
